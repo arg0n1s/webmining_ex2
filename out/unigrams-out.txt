@@ -1,0 +1,5 @@
+0. german (Texte/challenge/1.unigram.txt) 
+1. english (Texte/challenge/2.unigram.txt) 
+2. english (Texte/challenge/3.unigram.txt) 
+3. spanish (Texte/challenge/4.unigram.txt) 
+4. german (Texte/challenge/5.unigram.txt) 

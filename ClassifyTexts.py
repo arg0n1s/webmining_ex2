@@ -1,5 +1,7 @@
 import TextStatistics as ts
 import pickle
+from pathlib import Path
+import codecs
 
 def load_feature_vectors():
     dict = {}
@@ -34,12 +36,19 @@ def classify_text(path, feature_vectors):
             best_label = label
             best_score = result[label]
     print("The text is probably written in ",best_label,". Result of histogram intersection d=",best_score)
+    return best_label
 
+def classify_unigrams():
+    p = Path("Texte/challenge")
+    files = list(p.glob("*.unigram.txt"))
+    fv = load_feature_vectors()
+    labels = [classify_text(path, fv) for path in files]
 
+    out = ""
+    for index, label in enumerate(labels):
+        out = out + str(index)+". "+label+" ("+files[index].__str__()+") \n"
+    file = codecs.open("out/unigrams-out.txt", 'w', 'utf-8')
+    file.write(out)
+    file.close()
 
-fv = load_feature_vectors()
-classify_text("Texte/Deutsch/goethe - faust.txt", fv)
-classify_text("Texte/Deutsch/kafka - urteil.txt", fv)
-classify_text("Texte/Deutsch/kafka-verwandlung.txt", fv)
-classify_text("Texte/Deutsch/kant - vernunft.txt", fv)
-classify_text("Texte/Deutsch/nietzsche - zaratustra.txt", fv)
+classify_unigrams()
