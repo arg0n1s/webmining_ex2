@@ -4,11 +4,18 @@ import numpy as np
 
 class TokenStatistic:
 
-    def __init__(self):
-        self.labels = []
-        self.absFrequency = []
-        self.relFrequency = []
-        self.tokenCount = 0
+    def __init__(self, data=[], count=0):
+        self.labels = [item[0] for item in data]
+        self.absFrequency = [item[1] for item in data]
+        self.relFrequency = [item[2] for item in data]
+        self.tokenCount = count
+
+def get_lexical_sorting(token):
+    alist = []
+    for index, item in enumerate(token.labels):
+        alist.append([item, token.absFrequency[index], token.relFrequency[index]])
+    alist = sorted(alist, key=lambda item: item[0])
+    return TokenStatistic(alist, token.tokenCount)
 
 class TextStatistics:
 
