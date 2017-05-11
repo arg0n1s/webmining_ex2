@@ -1,0 +1,6 @@
+0. english (Test Data/asimov - 01 (englisch).txt) 
+1. german (Test Data/buechner - woyzeck (deutsch).txt) 
+2. english (Test Data/newman - apolog (englisch).txt) 
+3. german (Test Data/shakesp - othello (deutsch).txt) 
+4. spanish (Test Data/spanish1.txt) 
+5. spanish (Test Data/spanish2.txt) 
