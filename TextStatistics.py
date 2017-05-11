@@ -89,7 +89,8 @@ class TextStatistics:
         self.letters.labels = [item[0] for item in letters]
         self.letters.absFrequency = [item[1] for item in letters]
 
-        listOfDoubleLetters = []
+        listOfDoubleLetters = {}
+        '''
         for i, item in enumerate(letters):
             seq = ''.join(item[0] + item[0])
             counter = 0
@@ -99,8 +100,18 @@ class TextStatistics:
                 index = string.find(seq, index + 1)
             if counter > 0:
                 listOfDoubleLetters.append([seq, counter])
+        '''
+        for i in range(0,string.__len__(),2):
+            if i+1 <string.__len__():
+                seq = ''.join(string[i] + string[i+1])
+                if seq in listOfDoubleLetters.keys():
+                    listOfDoubleLetters[seq] = listOfDoubleLetters[seq] + 1
+                else:
+                    listOfDoubleLetters[seq] = 1
+            else:
+                break
 
-        listOfDoubleLetters = sorted(listOfDoubleLetters, key=lambda item: item[1], reverse=True)
+        listOfDoubleLetters = sorted(listOfDoubleLetters.items(), key=lambda item: item[1], reverse=True)
         self.doubleLetters.labels = [item[0] for item in listOfDoubleLetters]
         self.doubleLetters.absFrequency = [item[1] for item in listOfDoubleLetters]
 
