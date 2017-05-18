@@ -2,7 +2,82 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd6c963c-70ba-459a-9de4-3279bcf1016c" name="Default" comment="integrated some statistics">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/result" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/visited_sites.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-1458729325412328628.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-1891194046962493912.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-3386875025319859482.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-3751685880179385017.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-4613121690208876674.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-5613147988386298172.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-6120160801485560370.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-6254376470488347654.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-6547824038063492002.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-6603520269390494928.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-7379544771226098672.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-7679987508851954363.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/-8855542454777661264.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/1068986282774223981.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/2178107403236809445.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/4535744917219262429.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/5263576971342436488.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/5561027629281515938.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/5571716209797381314.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/6028016980353732534.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/7341840703310206734.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/7367349785829821377.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/7520499618827593788.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/7539082764984911524.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/crawl/websites/7846111754994458339.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/english_dl_features" afterPath="$PROJECT_DIR$/out/english_dl_features" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/english_sl_features" afterPath="$PROJECT_DIR$/out/english_sl_features" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/german_dl_features" afterPath="$PROJECT_DIR$/out/german_dl_features" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/german_features" afterPath="$PROJECT_DIR$/out/german_features" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/german_sl_features" afterPath="$PROJECT_DIR$/out/german_sl_features" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/spanish_features" afterPath="$PROJECT_DIR$/out/spanish_features" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/spanish_sl_features" afterPath="$PROJECT_DIR$/out/spanish_sl_features" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AnalyzeMultipleTexts.py" afterPath="$PROJECT_DIR$/AnalyzeMultipleTexts.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ClassifyTexts.py" afterPath="$PROJECT_DIR$/ClassifyTexts.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Test Data/asimov - 01 (englisch).txt" afterPath="$PROJECT_DIR$/Test Data/asimov - 01 (englisch).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Test Data/buechner - woyzeck (deutsch).txt" afterPath="$PROJECT_DIR$/Test Data/buechner - woyzeck (deutsch).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Test Data/newman - apolog (englisch).txt" afterPath="$PROJECT_DIR$/Test Data/newman - apolog (englisch).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Test Data/shakesp - othello (deutsch).txt" afterPath="$PROJECT_DIR$/Test Data/shakesp - othello (deutsch).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Test Data/spanish1.txt" afterPath="$PROJECT_DIR$/Test Data/spanish1.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Test Data/spanish2.txt" afterPath="$PROJECT_DIR$/Test Data/spanish2.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TextStatistics.py" afterPath="$PROJECT_DIR$/TextStatistics.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Deutsch/goethe - faust.txt" afterPath="$PROJECT_DIR$/Texte/Deutsch/goethe - faust.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Deutsch/kafka - urteil.txt" afterPath="$PROJECT_DIR$/Texte/Deutsch/kafka - urteil.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Deutsch/kafka-verwandlung.txt" afterPath="$PROJECT_DIR$/Texte/Deutsch/kafka-verwandlung.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Deutsch/kant - vernunft.txt" afterPath="$PROJECT_DIR$/Texte/Deutsch/kant - vernunft.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Deutsch/nietzsche - zaratustra.txt" afterPath="$PROJECT_DIR$/Texte/Deutsch/nietzsche - zaratustra.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Englisch/dante - divine comedy.txt" afterPath="$PROJECT_DIR$/Texte/Englisch/dante - divine comedy.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Englisch/jules verne - 20000.txt" afterPath="$PROJECT_DIR$/Texte/Englisch/jules verne - 20000.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Englisch/lovecraft_dunwich.txt" afterPath="$PROJECT_DIR$/Texte/Englisch/lovecraft_dunwich.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Englisch/poe - poems(eng).txt" afterPath="$PROJECT_DIR$/Texte/Englisch/poe - poems(eng).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Englisch/shakespeare_macbeth.txt" afterPath="$PROJECT_DIR$/Texte/Englisch/shakespeare_macbeth.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Spanisch/DonQuijote.txt" afterPath="$PROJECT_DIR$/Texte/Spanisch/DonQuijote.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Spanisch/n-a(esp).txt" afterPath="$PROJECT_DIR$/Texte/Spanisch/n-a(esp).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Spanisch/poe - poemas(sp).txt" afterPath="$PROJECT_DIR$/Texte/Spanisch/poe - poemas(sp).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Spanisch/shakespeare - compilation(esp).txt" afterPath="$PROJECT_DIR$/Texte/Spanisch/shakespeare - compilation(esp).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/Spanisch/voltaire (esp).txt" afterPath="$PROJECT_DIR$/Texte/Spanisch/voltaire (esp).txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/1.unigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/1.unigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/10.bigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/10.bigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/2.unigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/2.unigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/3.unigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/3.unigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/4.unigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/4.unigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/5.unigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/5.unigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/6.bigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/6.bigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/7.bigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/7.bigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/8.bigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/8.bigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Texte/challenge/9.bigram.txt" afterPath="$PROJECT_DIR$/Texte/challenge/9.bigram.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crawler.py" afterPath="$PROJECT_DIR$/crawler.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/bigrams-out.txt" afterPath="$PROJECT_DIR$/out/bigrams-out.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/english_features" afterPath="$PROJECT_DIR$/out/english_features" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/spanish_dl_features" afterPath="$PROJECT_DIR$/out/spanish_dl_features" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/testdata-out.txt" afterPath="$PROJECT_DIR$/out/testdata-out.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/unigrams-out.txt" afterPath="$PROJECT_DIR$/out/unigrams-out.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,25 +88,15 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file leaf-file-name="crawler.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/crawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+            <state relative-caret-position="-2222">
+              <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="visited_sites.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/crawl/visited_sites.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="930">
-              <caret line="62" column="47" lean-forward="false" selection-start-line="62" selection-start-column="47" selection-end-line="62" selection-end-column="47" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -80,7 +145,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -110,6 +174,7 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -369,7 +434,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1920" height="1173" extended-state="0" />
+    <frame x="0" y="23" width="1920" height="1173" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -448,6 +513,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/crawl/visited_sites.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="930">
+          <caret line="62" column="47" lean-forward="false" selection-start-line="62" selection-start-column="47" selection-end-line="62" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/AnalyzeMultipleTexts.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
@@ -459,7 +541,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1470">
           <caret line="101" column="16" lean-forward="false" selection-start-line="99" selection-start-column="4" selection-end-line="101" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -484,7 +565,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1470">
           <caret line="101" column="16" lean-forward="true" selection-start-line="99" selection-start-column="4" selection-end-line="101" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -523,7 +603,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="690">
           <caret line="49" column="60" lean-forward="true" selection-start-line="49" selection-start-column="60" selection-end-line="49" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -636,7 +715,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1440">
           <caret line="99" column="60" lean-forward="false" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -644,22 +722,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="6" column="41" lean-forward="true" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/crawl/visited_sites.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
+        <state relative-caret-position="682">
           <caret line="62" column="47" lean-forward="false" selection-start-line="62" selection-start-column="47" selection-end-line="62" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/crawler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        <state relative-caret-position="-2222">
+          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
