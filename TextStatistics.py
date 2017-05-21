@@ -19,15 +19,19 @@ def get_lexical_sorting(token):
 
 class TextStatistics:
 
-    def __init__(self, path):
+    def __init__(self, path, text=None):
         self.text = []
         self.words = TokenStatistic()
         self.letters = TokenStatistic()
         self.doubleLetters = TokenStatistic()
-        self.update_statistics(path)
+        self.update_statistics(path, text)
 
-    def update_statistics(self, path):
-        self.__parse_text_file(path)
+    def update_statistics(self, path, text):
+        if path is None and not text is None:
+            self.text = text
+        else:
+            self.__parse_text_file(path)
+
         self.__extract_letters()
         self.__extract_words()
         self.__calc_token_statistics()

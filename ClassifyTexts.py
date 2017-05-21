@@ -101,6 +101,6 @@ def check_on_testdata(param="sl"):
     file.write(out)
     file.close()
 
-classify_unigrams()
-classify_bigrams()
-check_on_testdata()
+#classify_unigrams()
+#classify_bigrams()
+#check_on_testdata()

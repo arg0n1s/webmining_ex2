@@ -7,8 +7,8 @@ from threading import Thread
 import ssl
 import random
 import time
-from joblib import Parallel, delayed
-import multiprocessing
+import TextStatistics as ts
+import ClassifyTexts as ct
 
 
 def calc_jaccard_index(page1, page2):
@@ -33,6 +33,8 @@ class Page:
         self.children = []
         self.num_of_children = 0
         self.set_of_shingles = set()
+        self.language = ""
+        self.language_confidence = 0
 
     def __str__(self):
         return self.url + " -> containing " + str(self.num_of_children) + " out-going links"
@@ -56,9 +58,13 @@ class Page:
         self.set_of_shingles = set(shingles)
 
 class Crawler:
-    def __init__(self, num_of_threads=250, min_visited_pages=300):
+    # preferred languages are either german, english or spanish or random
+    def __init__(self, num_of_threads=250, min_visited_pages=300 , preferred_language="random"):
         self.num_of_threads = num_of_threads
         self.min_visited_pages = min_visited_pages
+        self.preferred_language = preferred_language
+        if not preferred_language is "random":
+            self.language_features = ct.load_feature_vectors()
         self.threading_active = True
 
         ctx = ssl.create_default_context()
@@ -67,6 +73,7 @@ class Crawler:
         self.cert = ctx
 
         self.queue = {}
+        self.ordered_queue = {}
         self.probed_urls = {}
         self.visited_urls = {}
         self.unique_urls = {}
@@ -94,6 +101,9 @@ class Crawler:
         initial = []
         initial.append([initial_page, None])
         self.queue[urllib.parse.urlparse(initial_page).hostname] = initial
+        initial = []
+        initial.append([initial_page, None, 1, self.preferred_language])
+        self.ordered_queue[urllib.parse.urlparse(initial_page).hostname] = initial
 
         self.hyperlink_count[initial_page] = 1
         self.host_visits[urllib.parse.urlparse(initial_page).hostname] = 1
@@ -137,7 +147,6 @@ class Crawler:
                 jacInd = calc_jaccard_index(self.visited_urls[url], self.unique_urls[url2])
                 if jacInd >= threshold:
                     unique = False
-                    unique = False
             if unique:
                 self.unique_urls[url] = self.visited_urls[url]
             print("Progress: ", 100.0 * index / (self.visited_urls.__len__() - 1))
@@ -160,14 +169,29 @@ class Crawler:
 
     def __thread_creator(self):
         while self.threading_active:
-            if self.waiting_threads.__len__() < self.num_of_threads and self.queue.__len__() > 0 and self.visited_urls.__len__() < self.min_visited_pages:
-                keySet = list(self.queue.keys())
-                rndKey = keySet[random.randint(0, keySet.__len__() - 1)]
-                if self.queue[rndKey].__len__() <= 0:
-                    continue
-                index = random.randint(0, self.queue[rndKey].__len__() - 1)
-                t = Thread(target=self.__crawl_thread, args=(self.queue[rndKey].pop(index),))
-                self.waiting_threads.append(t)
+            if self.waiting_threads.__len__() < self.num_of_threads  and self.visited_urls.__len__() < self.min_visited_pages:
+                #print(self.ordered_queue)
+                if not self.preferred_language is "random":
+                    if self.ordered_queue.__len__() > 0:
+                        keySet = list(self.ordered_queue.keys())
+                        rndKey = keySet[random.randint(0, keySet.__len__() - 1)]
+                        if self.ordered_queue[rndKey].__len__() <= 0:
+                            continue
+                        item = self.ordered_queue[rndKey].pop()
+                        #print(item)
+                        #item = [item[0], item[1]]
+                        #print(item)
+                        t = Thread(target=self.__crawl_thread, args=(item,))
+                        self.waiting_threads.append(t)
+                else:
+                    if self.queue.__len__() > 0:
+                        keySet = list(self.queue.keys())
+                        rndKey = keySet[random.randint(0, keySet.__len__() - 1)]
+                        if self.queue[rndKey].__len__() <= 0:
+                            continue
+                        index = random.randint(0, self.queue[rndKey].__len__() - 1)
+                        t = Thread(target=self.__crawl_thread, args=(self.queue[rndKey].pop(index),))
+                        self.waiting_threads.append(t)
 
     def __thread_dispatcher(self):
         while self.threading_active:
@@ -235,12 +259,63 @@ class Crawler:
                 self.visited_urls[url[0]].extract_shingles(3)
         # remember hyperlinks that caused a connection error
         except Exception as inst:
+            print(url)
             self.probed_urls[url[0]] = None
+        # calculate page language
+        if url[0] in self.visited_urls and not self.preferred_language is "random":
+            statistics = ts.TextStatistics(None, self.visited_urls[url[0]].content)
+            letters = ts.get_lexical_sorting(statistics.letters)
+            #pairs = ts.get_lexical_sorting(statistics.doubleLetters)
+            labels = ct.calc_histogram_intersection(letters, self.language_features)
+            best_score = 0
+            best_label = "none"
+            for label in labels:
+                if labels[label] > best_score:
+                    best_label = label
+                    best_score = labels[label]
+
+            #print(labels, " ///// Best: ", best_label, " score: ",best_score)
+            self.visited_urls[url[0]].language = best_label
+            self.visited_urls[url[0]].language_confidence = best_score
         # expand the ordered queue by the recently found hyperlinks
-        for host in ordered_by_host:
-            if not host in self.queue.keys():
-                self.queue[host] = []
-            self.queue[host].extend(list(ordered_by_host[host].items()))
+        if self.preferred_language is "random":
+            for host in ordered_by_host:
+                if not host in self.queue.keys():
+                    self.queue[host] = []
+                self.queue[host].extend(list(ordered_by_host[host].items()))
+        else:
+            for host in ordered_by_host:
+                if not host in self.ordered_queue.keys():
+                    self.ordered_queue[host] = []
+                if url[0] in self.visited_urls:
+                    #print(url)
+                    #print(ordered_by_host[host].items())
+                    self.__insert_in_ordered_queue(host, self.visited_urls[url[0]],
+                                                       list(ordered_by_host[host].items()))
+
+    def __insert_in_ordered_queue(self, hostname, page, links):
+        rank = page.language_confidence
+        lang = page.language
+        ranked_links = []
+        for link in links:
+            ranked_links.append(list([link[0], link[1], rank, lang]))
+        #print(rank, " ", lang)
+        if not lang is self.preferred_language:
+            self.ordered_queue[hostname].extend(ranked_links)
+            #print(self.queue[hostname])
+            return
+
+        index = 0
+        for i, item in enumerate(self.ordered_queue[hostname]):
+            if rank > item[2] or not item[3] is self.preferred_language:
+               index = i
+        if index >= 1:
+            index -= 1
+        temp_queue = self.ordered_queue[hostname][0:index]
+        temp_queue.extend(ranked_links)
+        temp_queue.extend(self.ordered_queue[hostname][index+1:self.ordered_queue[hostname].__len__()])
+        #self.ordered_queue[hostname][index:index]=ranked_links
+        self.ordered_queue[hostname] = temp_queue
 
     def save_crawl_urls(self, default_path="crawl/", filename="visited_sites.txt"):
         path = default_path + filename
@@ -248,7 +323,7 @@ class Crawler:
         counter = 0
         for item in self.visited_urls:
             counter += 1
-            urls += str(counter) + ". Url= " + item + " // Parent=" + str(self.visited_urls[item].parent) + "\n"
+            urls += str(counter) + ". Url= " + item + " // language= " + self.visited_urls[item].language + " // Parent=" + str(self.visited_urls[item].parent) + "\n"
 
         file = codecs.open(path, 'w', 'utf-8')
         file.write(urls)
@@ -260,9 +335,9 @@ class Crawler:
         self.waiting_threads = []
         pickle.dump(self, open(default_path + filename, "wb"))
 
-# c = Crawler( 250, 400)
-# c.new_crawl("http://www.wikipedia.de")
-# c.save_crawl_urls("crawl/", "wiki_de.txt")
+c = Crawler( 5, 20)
+c.new_crawl("http://www.spiegel.de")
+c.save_crawl_urls("crawl/", "wiki_de.txt")
 # c.save_crawl_to_disk("crawl/", "wiki_new")
 # c = load_crawl_from_disk("crawl/", "wiki_new")
 # c.remove_similar_pages()
