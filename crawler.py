@@ -17,6 +17,7 @@ class Page:
         self.content = content
         self.children = []
         self.num_of_children = 0
+        self.set_of_shingles = set()
 
     def __str__(self):
         return self.url+" -> containing " + str(self.num_of_children) + " out-going links"
@@ -27,6 +28,23 @@ class Page:
     def add_child(self, child):
         self.children.append(child)
         self.num_of_children += 1
+
+    def extract_shingles(self, words_per_shingle=3):
+        clean_text = bs(self.content, "html.parser").get_text()
+        wordList = ''.join([c if c.isalpha() else ' ' for c in clean_text]).lower().split()
+        shingles = []
+        for index, word in enumerate(wordList):
+            if index + words_per_shingle < wordList.__len__():
+                shingles.append(' '.join(wordList[index:index + words_per_shingle]))
+            else:
+                break
+        self.set_of_shingles = set(shingles)
+
+    def calc_jaccard_index(self, page2):
+        if self.set_of_shingles.__len__() < 1 or page2.set_of_shingles.__len__() < 1:
+            return 0
+        return (self.set_of_shingles & page2.set_of_shingles).__len__() / (
+        self.set_of_shingles | page2.set_of_shingles).__len__()
 
 class Crawler:
 
@@ -43,6 +61,7 @@ class Crawler:
         self.queue = {}
         self.probed_urls = {}
         self.visited_urls = {}
+        self.unique_urls = {}
         self.active_threads = []
         self.waiting_threads = []
 
@@ -97,6 +116,24 @@ class Crawler:
 
         print("Finished! --> Queue size: ", self.queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(), " Url out size: ",
               self.visited_urls.__len__())
+        print("removing similar pages ...")
+        self.remove_similar_pages()
+        print("Finished! --> Queue size: ", self.queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(),
+              " Url out size: ",
+              self.visited_urls.__len__(),
+            " Url unique size: ",
+            self.unique_urls.__len__())
+
+    def remove_similar_pages(self, threshold=0.7):
+        self.unique_urls = {}
+        for url in self.visited_urls:
+            unique = True
+            for url2 in self.unique_urls:
+                jacInd = self.visited_urls[url].calc_jaccard_index(self.unique_urls[url2])
+                if jacInd>=threshold:
+                    unique = False
+            if unique:
+                self.unique_urls[url]=self.visited_urls[url]
 
     def __thread_watcher(self):
         thresh = int(self.num_of_threads*0.7)
@@ -142,12 +179,18 @@ class Crawler:
             # extract hyperlinks
             for link in s.find_all('a'):
                 potential_link = link.get('href')
+                # check if link is empty
+                if potential_link is "":
+                    continue
                 check = urllib.parse.urlparse(potential_link)
+                # check if link is completely broken
+                if check.scheme is '' and check.netloc is '':
+                    continue
                 # check for relative links
-                if check.scheme is '' or check.netloc is '':
-                    potential_link = url[0] + potential_link
-                check = urllib.parse.urlparse(potential_link)
+                if check.netloc is '':
+                    potential_link = url[0] + "/" + potential_link
                 # check for syntactical correctness
+                check = urllib.parse.urlparse(potential_link)
                 if check.scheme is '' or check.netloc is '':
                     continue
                 # statistics crap
@@ -179,6 +222,8 @@ class Crawler:
                     self.visited_urls[url[1]].add_child(self.visited_urls[url[0]])
                 else:
                     self.visited_urls[url[0]] = Page(url[0], None, current_hostname, str(s))
+                # extract shingles for later usage
+                self.visited_urls[url[0]].extract_shingles(3)
         # remember hyperlinks that caused a connection error
         except Exception as inst:
             self.probed_urls[url[0]] = None
@@ -211,8 +256,9 @@ def load_crawl_from_disk(default_path="crawl/", filename="result"):
     crawl.reinit_cert()
     return crawl
 
-#c = Crawler( 250, 1000)
-#c.new_crawl("http://www.wikipedia.de")
+c = Crawler( 25, 100)
+c.new_crawl("http://www.wikipedia.de")
 #c.save_crawl_urls("crawl/", "wiki_de.txt")
 #c.save_crawl_to_disk("crawl/", "wiki_de")
 #c = load_crawl_from_disk("crawl/", "spiegel_de")
+
