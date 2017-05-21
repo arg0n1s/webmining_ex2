@@ -120,8 +120,13 @@ class Crawler:
         while self.visited_urls.__len__() < self.min_visited_pages:
             print("THREAD STATUS --> Num of act. Threads: ", self.active_threads.__len__(),
                   " Num of waiting Threads: ", self.waiting_threads.__len__())
-            print("CRAWL STATUS  --> Queue size: ", self.queue.__len__(), " Url Cache size: ",
-                  self.probed_urls.__len__(), " Url out size: ", self.visited_urls.__len__())
+            if self.preferred_language is "random":
+                print("CRAWL STATUS  --> Queue size: ", self.queue.__len__(), " Url Cache size: ",
+                    self.probed_urls.__len__(), " Url out size: ", self.visited_urls.__len__())
+            else:
+                print("CRAWL STATUS  --> Ordered Queue size: ", self.ordered_queue.__len__(), " Url Cache size: ",
+                      self.probed_urls.__len__(), " Url out size: ", self.visited_urls.__len__())
+
             time.sleep(0.5)
 
         self.threading_active = False
@@ -133,9 +138,14 @@ class Crawler:
         creator.join()
         watcher.join()
 
-        print("Finished! --> Queue size: ", self.queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(),
-              " Url out size: ",
-              self.visited_urls.__len__())
+        if self.preferred_language is "random":
+            print("Finished! --> Queue size: ", self.queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(),
+                " Url out size: ",
+                self.visited_urls.__len__())
+        else:
+            print("Finished! --> Ordered Queue size: ", self.ordered_queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(),
+                  " Url out size: ",
+                  self.visited_urls.__len__())
 
     def remove_similar_pages(self, threshold=0.7):
         print("removing similar pages ...")
@@ -259,13 +269,15 @@ class Crawler:
                 self.visited_urls[url[0]].extract_shingles(3)
         # remember hyperlinks that caused a connection error
         except Exception as inst:
-            print(url)
+            #print(url)
             self.probed_urls[url[0]] = None
         # calculate page language
         if url[0] in self.visited_urls and not self.preferred_language is "random":
-            statistics = ts.TextStatistics(None, self.visited_urls[url[0]].content)
+            #statistics = ts.TextStatistics(None, bs(self.visited_urls[url[0]].content, "html.parser").get_text())
+            a = bs(self.visited_urls[url[0]].content, "html.parser")
+            [x.extract() for x in a.findAll('script')]
+            statistics = ts.TextStatistics(None, a.get_text())
             letters = ts.get_lexical_sorting(statistics.letters)
-            #pairs = ts.get_lexical_sorting(statistics.doubleLetters)
             labels = ct.calc_histogram_intersection(letters, self.language_features)
             best_score = 0
             best_label = "none"
@@ -273,7 +285,6 @@ class Crawler:
                 if labels[label] > best_score:
                     best_label = label
                     best_score = labels[label]
-
             #print(labels, " ///// Best: ", best_label, " score: ",best_score)
             self.visited_urls[url[0]].language = best_label
             self.visited_urls[url[0]].language_confidence = best_score
@@ -335,9 +346,9 @@ class Crawler:
         self.waiting_threads = []
         pickle.dump(self, open(default_path + filename, "wb"))
 
-c = Crawler( 5, 20)
-c.new_crawl("http://www.spiegel.de")
-c.save_crawl_urls("crawl/", "wiki_de.txt")
+#c = Crawler( 5, 20, german)
+#c.new_crawl("http://www.spiegel.de")
+#c.save_crawl_urls("crawl/", "wiki_de.txt")
 # c.save_crawl_to_disk("crawl/", "wiki_new")
 # c = load_crawl_from_disk("crawl/", "wiki_new")
 # c.remove_similar_pages()
