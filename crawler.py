@@ -7,9 +7,24 @@ from threading import Thread
 import ssl
 import random
 import time
+from joblib import Parallel, delayed
+import multiprocessing
+
+
+def calc_jaccard_index(page1, page2):
+    if page1.set_of_shingles.__len__() < 1 or page2.set_of_shingles.__len__() < 1:
+        return 0
+    return (page1.set_of_shingles & page2.set_of_shingles).__len__() / (
+        page1.set_of_shingles | page2.set_of_shingles).__len__()
+
+
+def load_crawl_from_disk(default_path="crawl/", filename="result"):
+    crawl = pickle.load(open(default_path + filename, "rb"))
+    crawl.reinit_cert()
+    return crawl
+
 
 class Page:
-
     def __init__(self, url, parent, host, content):
         self.url = url
         self.parent = parent
@@ -20,7 +35,7 @@ class Page:
         self.set_of_shingles = set()
 
     def __str__(self):
-        return self.url+" -> containing " + str(self.num_of_children) + " out-going links"
+        return self.url + " -> containing " + str(self.num_of_children) + " out-going links"
 
     def __repr__(self):
         return self.__str__()
@@ -40,14 +55,7 @@ class Page:
                 break
         self.set_of_shingles = set(shingles)
 
-    def calc_jaccard_index(self, page2):
-        if self.set_of_shingles.__len__() < 1 or page2.set_of_shingles.__len__() < 1:
-            return 0
-        return (self.set_of_shingles & page2.set_of_shingles).__len__() / (
-        self.set_of_shingles | page2.set_of_shingles).__len__()
-
 class Crawler:
-
     def __init__(self, num_of_threads=250, min_visited_pages=300):
         self.num_of_threads = num_of_threads
         self.min_visited_pages = min_visited_pages
@@ -83,13 +91,12 @@ class Crawler:
         self.hyperlink_count = {}
         self.host_visits = {}
 
-        #self.queue.append([initial_page, None])
         initial = []
         initial.append([initial_page, None])
-        self.queue[urllib.parse.urlparse(initial_page).hostname]=initial
+        self.queue[urllib.parse.urlparse(initial_page).hostname] = initial
 
-        self.hyperlink_count[initial_page]=1
-        self.host_visits[urllib.parse.urlparse(initial_page).hostname]=1
+        self.hyperlink_count[initial_page] = 1
+        self.host_visits[urllib.parse.urlparse(initial_page).hostname] = 1
 
         self.threads = []
 
@@ -101,8 +108,10 @@ class Crawler:
         dispatcher.start()
 
         while self.visited_urls.__len__() < self.min_visited_pages:
-            print("THREAD STATUS --> Num of act. Threads: ", self.active_threads.__len__(), " Num of waiting Threads: ", self.waiting_threads.__len__())
-            print("CRAWL STATUS  --> Queue size: ", self.queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(), " Url out size: ", self.visited_urls.__len__())
+            print("THREAD STATUS --> Num of act. Threads: ", self.active_threads.__len__(),
+                  " Num of waiting Threads: ", self.waiting_threads.__len__())
+            print("CRAWL STATUS  --> Queue size: ", self.queue.__len__(), " Url Cache size: ",
+                  self.probed_urls.__len__(), " Url out size: ", self.visited_urls.__len__())
             time.sleep(0.5)
 
         self.threading_active = False
@@ -114,31 +123,34 @@ class Crawler:
         creator.join()
         watcher.join()
 
-        print("Finished! --> Queue size: ", self.queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(), " Url out size: ",
+        print("Finished! --> Queue size: ", self.queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(),
+              " Url out size: ",
               self.visited_urls.__len__())
+
+    def remove_similar_pages(self, threshold=0.7):
         print("removing similar pages ...")
-        self.remove_similar_pages()
+
+        self.unique_urls = {}
+        for index, url in enumerate(self.visited_urls):
+            unique = True
+            for url2 in self.unique_urls:
+                jacInd = calc_jaccard_index(self.visited_urls[url], self.unique_urls[url2])
+                if jacInd >= threshold:
+                    unique = False
+                    unique = False
+            if unique:
+                self.unique_urls[url] = self.visited_urls[url]
+            print("Progress: ", 100.0 * index / (self.visited_urls.__len__() - 1))
         print("Finished! --> Queue size: ", self.queue.__len__(), " Url Cache size: ", self.probed_urls.__len__(),
               " Url out size: ",
               self.visited_urls.__len__(),
-            " Url unique size: ",
-            self.unique_urls.__len__())
-
-    def remove_similar_pages(self, threshold=0.7):
-        self.unique_urls = {}
-        for url in self.visited_urls:
-            unique = True
-            for url2 in self.unique_urls:
-                jacInd = self.visited_urls[url].calc_jaccard_index(self.unique_urls[url2])
-                if jacInd>=threshold:
-                    unique = False
-            if unique:
-                self.unique_urls[url]=self.visited_urls[url]
+              " Url unique size: ",
+              self.unique_urls.__len__())
 
     def __thread_watcher(self):
-        thresh = int(self.num_of_threads*0.7)
+        thresh = int(self.num_of_threads * 0.7)
         while self.threading_active:
-            if self.active_threads.__len__()>thresh:
+            if self.active_threads.__len__() > thresh:
                 active = []
                 for thread in self.active_threads:
                     if thread.is_alive():
@@ -150,26 +162,23 @@ class Crawler:
         while self.threading_active:
             if self.waiting_threads.__len__() < self.num_of_threads and self.queue.__len__() > 0 and self.visited_urls.__len__() < self.min_visited_pages:
                 keySet = list(self.queue.keys())
-                #print(keySet)
-                rndKey = keySet[random.randint(0, keySet.__len__()-1)]
-                #print(rndKey)
+                rndKey = keySet[random.randint(0, keySet.__len__() - 1)]
                 if self.queue[rndKey].__len__() <= 0:
                     continue
-                index = random.randint(0,self.queue[rndKey].__len__()-1)
-                #print(index)
+                index = random.randint(0, self.queue[rndKey].__len__() - 1)
                 t = Thread(target=self.__crawl_thread, args=(self.queue[rndKey].pop(index),))
                 self.waiting_threads.append(t)
 
     def __thread_dispatcher(self):
         while self.threading_active:
-            if self.active_threads.__len__() < self.num_of_threads and self.waiting_threads.__len__()>0 and self.visited_urls.__len__() < self.min_visited_pages:
+            if self.active_threads.__len__() < self.num_of_threads and self.waiting_threads.__len__() > 0 and self.visited_urls.__len__() < self.min_visited_pages:
                 t = self.waiting_threads.pop()
                 self.active_threads.append(t)
                 t.start()
 
     def __crawl_thread(self, url):
         crawled_links = {}
-        ordered_by_host={}
+        ordered_by_host = {}
         # try to establish a connection to web host
         try:
             page = urllib.request.urlopen(url[0], timeout=0.5, context=self.cert)
@@ -195,8 +204,8 @@ class Crawler:
                     continue
                 # statistics crap
                 if not potential_link in self.hyperlink_count.keys():
-                    self.hyperlink_count[potential_link]=1
-                self.hyperlink_count[potential_link]+=1
+                    self.hyperlink_count[potential_link] = 1
+                self.hyperlink_count[potential_link] += 1
                 # extract hostname from hyperlink
                 hostname = check.hostname
                 # if hyperlink not yet probed or in enqueued -> enqueue
@@ -214,8 +223,8 @@ class Crawler:
                 current_hostname = urllib.parse.urlparse(url[0])
                 # count host visits
                 if not current_hostname in self.host_visits.keys():
-                    self.host_visits[current_hostname]=1
-                self.host_visits[current_hostname]+=1
+                    self.host_visits[current_hostname] = 1
+                self.host_visits[current_hostname] += 1
                 # build a crawl tree, navigating the crawl might be useful at some point
                 if url[1] in self.visited_urls.keys():
                     self.visited_urls[url[0]] = Page(url[0], self.visited_urls[url[1]], current_hostname, str(s))
@@ -230,16 +239,16 @@ class Crawler:
         # expand the ordered queue by the recently found hyperlinks
         for host in ordered_by_host:
             if not host in self.queue.keys():
-                self.queue[host]=[]
+                self.queue[host] = []
             self.queue[host].extend(list(ordered_by_host[host].items()))
 
-    def save_crawl_urls(self, default_path = "crawl/", filename="visited_sites.txt"):
+    def save_crawl_urls(self, default_path="crawl/", filename="visited_sites.txt"):
         path = default_path + filename
         urls = ""
         counter = 0
         for item in self.visited_urls:
             counter += 1
-            urls += str(counter) + ". Url=" + item + " // Parent=" + str(self.visited_urls[item].parent) + "\n"
+            urls += str(counter) + ". Url= " + item + " // Parent=" + str(self.visited_urls[item].parent) + "\n"
 
         file = codecs.open(path, 'w', 'utf-8')
         file.write(urls)
@@ -249,16 +258,11 @@ class Crawler:
         self.cert = None
         self.active_threads = []
         self.waiting_threads = []
-        pickle.dump(self, open(default_path+filename, "wb"))
+        pickle.dump(self, open(default_path + filename, "wb"))
 
-def load_crawl_from_disk(default_path="crawl/", filename="result"):
-    crawl = pickle.load(open(default_path+filename, "rb"))
-    crawl.reinit_cert()
-    return crawl
-
-c = Crawler( 25, 100)
-c.new_crawl("http://www.wikipedia.de")
-#c.save_crawl_urls("crawl/", "wiki_de.txt")
-#c.save_crawl_to_disk("crawl/", "wiki_de")
-#c = load_crawl_from_disk("crawl/", "spiegel_de")
-
+# c = Crawler( 250, 400)
+# c.new_crawl("http://www.wikipedia.de")
+# c.save_crawl_urls("crawl/", "wiki_de.txt")
+# c.save_crawl_to_disk("crawl/", "wiki_new")
+# c = load_crawl_from_disk("crawl/", "wiki_new")
+# c.remove_similar_pages()
